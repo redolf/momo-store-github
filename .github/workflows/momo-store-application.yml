@@ -16,5 +16,5 @@ jobs:
       - name: Build Momo Store Docker Images
         run: |
           cd momo-store-application/backend
-          docker build
+          docker buildx build
           ls -la
