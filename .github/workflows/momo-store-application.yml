@@ -22,10 +22,7 @@ jobs:
       - name: Build Momo Store Docker Images
         run: |
           cd momo-store-application/backend
-          docker build . --file Dockerfile --tag backend:$(date +%s)
+          docker build . --file Dockerfile --tag momo-store-backend:${{ env.VERSION }}
 
-      - name: Other
-        run: |
-          cd momo-store-application/backend
-          ls -la
+
           
