@@ -25,5 +25,7 @@ jobs:
           docker build . --file Dockerfile --tag backend:$(date +%s)
 
       - name: Other
-        run: ls -la
+        run: |
+          cd momo-store-application/backend
+          ls -la
           
