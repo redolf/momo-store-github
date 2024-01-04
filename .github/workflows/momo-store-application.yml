@@ -24,5 +24,8 @@ jobs:
           cd momo-store-application/backend
           docker build . --file Dockerfile --tag momo-store-backend:${{ env.VERSION }}
 
-
-          
+      - name: Push Docker image to registry
+        run: |
+          echo $LOGIN_DOCKER_REGISTRY
+          echo $SERVICE_TOKEN_GITHUB | docker login ghcr.io -u $LOGIN_DOCKER_REGISTRY --password-stdin
+          docker push ghcr.io/redolf/momo-store-backend:${{ env.VERSION }}
