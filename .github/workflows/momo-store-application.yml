@@ -1,0 +1,17 @@
+name: Momo-Store-Application
+
+on:
+  push:
+    paths:
+      - 'momo-store-application/**'
+      - '.github/workflows/momo-store-application.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Build Momo Store Docker Images
+        run: echo Hello World!!!
