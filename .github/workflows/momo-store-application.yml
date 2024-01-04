@@ -17,12 +17,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Momo Store Docker Images
-        run:
-          - cd momo-store-application/backend
-          - echo ${{ env.VERSION }}
-          - >
-            docker build
-            --build-arg VERSION=${{ env.VERSION }}
-            --tag $CI_REGISTRY_IMAGE/momo-store-backend:$CI_COMMIT_SHA
-            .
-            ls -la
+        run: |
+          cd momo-store-application/backend
+          echo ${{ env.VERSION }}
+          docker build
+          --build-arg VERSION=${{ env.VERSION }}
+          --tag $CI_REGISTRY_IMAGE/momo-store-backend:$CI_COMMIT_SHA
+          .
+          ls -la
