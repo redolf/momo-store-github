@@ -20,6 +20,8 @@ jobs:
         run: |
           cd momo-store-application/backend
           docker build . --file Dockerfile --tag momo-store-backend:${{ env.VERSION }}
+          echo ${{ env.VERSION }}
+          docker images
 
       - name: Push Docker image to registry
         run: |
