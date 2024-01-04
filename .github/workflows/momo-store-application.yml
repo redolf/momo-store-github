@@ -19,7 +19,7 @@ jobs:
       - name: Build Momo Store Docker Images
         run: |
           cd momo-store-application/backend
-          docker build . --file Dockerfile --tag ${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+          docker build . --file Dockerfile --tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
           echo ${{ env.VERSION }}
           docker images
 
