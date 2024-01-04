@@ -9,22 +9,47 @@ on:
       - 'momo-store-application/**'
       - '.github/workflows/momo-store-application.yml'
 
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Clone repository
+#         uses: actions/checkout@v4
+
+#       - name: Build Momo Store Docker Images
+#         run: |
+#           cd momo-store-application/backend
+#           docker build . --file Dockerfile --tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+#           echo ${{ env.VERSION }}
+#           docker images
+
+#       - name: Push Docker image to registry
+#         run: |
+#           echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.USERNAME_GITHUB }} --password-stdin
+#           docker push ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-
-      - name: Build Momo Store Docker Images
-        run: |
-          cd momo-store-application/backend
-          docker build . --file Dockerfile --tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
-          echo ${{ env.VERSION }}
-          docker images
-
-      - name: Push Docker image to registry
-        run: |
-          cd momo-store-application/backend
-          echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.USERNAME_GITHUB }} --password-stdin
-          docker push ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME_GITHUB }}
+          password: ${{ secrets.SERVICE_TOKEN_GITHUB }}
+      - 
+        name: Change dir Backend
+        run: cd momo-store-application/backend
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
