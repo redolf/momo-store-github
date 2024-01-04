@@ -27,5 +27,5 @@ jobs:
       - name: Push Docker image to registry
         run: |
           echo ${{ secrets.LOGIN_DOCKER_REGISTRY }}
-          echo $SERVICE_TOKEN_GITHUB | docker login ghcr.io -u $LOGIN_DOCKER_REGISTRY --password-stdin
+          echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.LOGIN_DOCKER_REGISTRY }} --password-stdin
           docker push ghcr.io/redolf/momo-store-backend:${{ env.VERSION }}
