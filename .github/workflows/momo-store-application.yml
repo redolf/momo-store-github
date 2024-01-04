@@ -52,4 +52,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+          tags: ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
