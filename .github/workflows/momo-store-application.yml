@@ -45,7 +45,10 @@ jobs:
           username: ${{ secrets.USERNAME_GITHUB }}
           password: ${{ secrets.SERVICE_TOKEN_GITHUB }}
       - name: Change dir Backend
-        run: cd momo-store-application/backend
+        run: |
+          cd momo-store-application/backend
+          pwd
+          ls -la
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
