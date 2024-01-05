@@ -20,14 +20,18 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.x'
-      - name: Change dir
-        run: cd momo-store-application/backend
       - name: Install dependencies
         run: go get .
+        with:
+          path: momo-store-application/backend
       - name: Build
         run: go build -v ./...
+        with:
+          path: momo-store-application/backend
       - name: Test with the Go CLI
         run: go test
+        with:
+          path: momo-store-application/backend
 
   build:
     needs: test
