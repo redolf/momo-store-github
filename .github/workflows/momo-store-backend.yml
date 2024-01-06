@@ -64,5 +64,5 @@ jobs:
         run: |
           echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.USERNAME_GITHUB }} --password-stdin
           docker pull ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
-          pwd
-          ls -la
+          docker tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }} ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:latest
+          docker push ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:latest
