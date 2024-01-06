@@ -53,6 +53,7 @@ jobs:
         run: go test -v ./...
 
   release:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Release Momo Store Backend Docker Images
