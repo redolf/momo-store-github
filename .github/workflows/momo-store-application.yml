@@ -30,13 +30,18 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.x'
-      - name: Install dependencies
-        run: |
-          cd ./cmd/api
-          go get .
+      # - name: Install dependencies
+      #   run: |
+      #     cd ./cmd/api
+      #     go get .
 
       - name: Build
-        run: go build -v ./...
+        run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/api
+
+      - name: Other
+        run: |
+          pwd
+          ls -la
 
       - name: Test with the Go CLI
         run: go test
