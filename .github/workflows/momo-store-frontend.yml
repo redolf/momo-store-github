@@ -52,7 +52,7 @@ jobs:
       - name: Testing Build
         run: npm run build --if-present
 
-      - name: Testing Source code
+      - name: Testing
         run: npm test -v ./...
 
   release:
