@@ -6,8 +6,8 @@ env:
 on:
   push:
     paths:
-      - 'momo-store-application/**'
-      - '.github/workflows/momo-store-application.yml'
+      - 'momo-store-application/backend/**'
+      - '.github/workflows/momo-store-backend.yml'
 
 defaults:
   run:
@@ -15,47 +15,14 @@ defaults:
 
 jobs:
 
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # - name: Other
-      #   run: |
-      #     pwd
-      #     ls -la
-
-      - name: Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21.5'
-      - name: Install dependencies
-        run: |
-          cd ./cmd/api
-          go get .
-
-      - name: Build Test
-        run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/api
-
-      # - name: Other
-      #   run: |
-      #     pwd
-      #     ls -la
-
-      - name: Test with the Go CLI
-        run: go test -v ./...
-
   build:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Build Momo Store Docker Images
+      - name: Build Momo Store Backend Docker Images
         run: |
-          # cd momo-store-application/backend
           docker build . --file Dockerfile --tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
           echo ${{ env.VERSION }}
           docker images
@@ -65,67 +32,32 @@ jobs:
           echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.USERNAME_GITHUB }} --password-stdin
           docker push ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
 
-# jobs:
-#   docker:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Clone repository
-#         uses: actions/checkout@v4
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v3
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v3
-#       - name: Login to GitHub Container Registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ghcr.io
-#           username: ${{ secrets.USERNAME_GITHUB }}
-#           password: ${{ secrets.SERVICE_TOKEN_GITHUB }}
-#       - name: Change dir Backend
-#         run: |
-#           cd momo-store-application/backend
-#           pwd
-#           ls -la
-#           cat Dockerfile
-#       - name: Build and push
-#         uses: docker/build-push-action@v5
-#         with:
-#           push: true
-#           tags: ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+  test:
+    needs: build
+    runs-on: ubuntu-latest
 
-# jobs:
-#   docker:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v3
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v3
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v3
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
-#       - name: Login to GitHub Container Registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ghcr.io
-#           username: ${{ github.repository_owner }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-#       - name: Build and push
-#         uses: docker/build-push-action@v5
-#         with:
-#           context: .
-#           platforms: linux/amd64,linux/arm64
-#           push: true
-#           tags: |
-#             user/app:latest
-#             user/app:1.0.0            
-#       - name: Push image to GHCR
-#         run: |
-#           docker buildx imagetools create \
-#             --tag ghcr.io/user/app:latest \
-#             --tag ghcr.io/user/app:1.0.0 \
-#             user/app:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.5'
+      
+      - name: Install dependencies
+        run: |
+          cd ./cmd/api
+          go get .
+
+      - name: Test with the Go CLI
+        run: go test -v ./...
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Momo Store Backend Docker Images
+        run: |
+          echo ${{ secrets.SERVICE_TOKEN_GITHUB }} | docker login ghcr.io -u ${{ secrets.USERNAME_GITHUB }} --password-stdin
+          docker pull ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
+          pwd
+          ls -la
