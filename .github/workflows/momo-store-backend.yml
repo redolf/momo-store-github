@@ -9,8 +9,6 @@ on:
       - 'momo-store-application/backend/**'
       - '.github/workflows/momo-store-backend.yml'
 
-
-
 jobs:
 
   build:
@@ -53,7 +51,7 @@ jobs:
           cd ./cmd/api
           go get .
 
-      - name: Test with the Go CLI
+      - name: Testing source code
         run: go test -v ./...
 
   release:
