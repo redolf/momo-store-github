@@ -9,13 +9,14 @@ on:
       - 'momo-store-application/backend/**'
       - '.github/workflows/momo-store-backend.yml'
 
-defaults:
-  run:
-    working-directory: ./momo-store-application/backend
+
 
 jobs:
 
   build:
+    defaults:
+      run:
+        working-directory: ./momo-store-application/backend
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -33,6 +34,9 @@ jobs:
           docker push ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
 
   test:
+    defaults:
+      run:
+        working-directory: ./momo-store-application/backend
     needs: build
     runs-on: ubuntu-latest
 
