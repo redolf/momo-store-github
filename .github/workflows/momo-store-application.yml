@@ -9,13 +9,14 @@ on:
       - 'momo-store-application/**'
       - '.github/workflows/momo-store-application.yml'
 
+defaults:
+  run:
+    working-directory: ./momo-store-application/backend
+
 jobs:
 
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./momo-store-application/backend
 
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +48,7 @@ jobs:
 
       - name: Build Momo Store Docker Images
         run: |
-          cd momo-store-application/backend
+          # cd momo-store-application/backend
           docker build . --file Dockerfile --tag ghcr.io/${{ secrets.USERNAME_GITHUB }}/momo-store-backend:${{ env.VERSION }}
           echo ${{ env.VERSION }}
           docker images
